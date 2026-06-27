@@ -1,0 +1,17 @@
+name: Conventional Labels
+
+on:
+  pull_request:
+    types: [opened, reopened, labeled, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  conventional:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: bcoe/conventional-release-labels@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

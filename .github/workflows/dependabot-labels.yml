@@ -1,0 +1,28 @@
+name: Dependabot Labels
+
+on:
+  pull_request:
+    types: [opened, reopened, labeled, synchronize]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  dependabot:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add Dependabot labels
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const labels = ['dependencies', 'semver:patch'];
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels
+            });

@@ -1,0 +1,36 @@
+name: Auto Merge (Patch Only)
+
+on:
+  pull_request:
+    types: [labeled, synchronize]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    if: >
+      contains(github.event.pull_request.labels.*.name, 'semver:patch') &&
+      contains(github.event.pull_request.labels.*.name, 'dependencies') ||
+      contains(github.event.pull_request.labels.*.name, 'security')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable auto-merge (squash)
+        uses: actions/github-script@v8
+        with:
+          script: |
+            await github.graphql(`
+              mutation($pr: ID!) {
+                enablePullRequestAutoMerge(input: {
+                  pullRequestId: $pr,
+                  mergeMethod: SQUASH
+                }) {
+                  pullRequest {
+                    number
+                  }
+                }
+              }
+            `, {
+              pr: context.payload.pull_request.node_id
+            });

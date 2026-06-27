@@ -1,0 +1,32 @@
+name: SemVer Labels
+
+on:
+  pull_request:
+    types: [opened, reopened, labeled, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  semver:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/github-script@v8
+        with:
+          script: |
+            const title = context.payload.pull_request.title;
+
+            const labels = [];
+            if (title.startsWith('fix')) labels.push('semver:patch');
+            if (title.startsWith('feat!')) labels.push('semver:major');
+            else if (title.startsWith('feat')) labels.push('semver:minor');
+
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels
+              });
+            }

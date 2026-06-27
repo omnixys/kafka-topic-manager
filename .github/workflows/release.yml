@@ -1,0 +1,331 @@
+name: Release & Publish Package
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+  actions: read
+  issues: write
+  pull-requests: write
+
+env:
+  COSIGN_EXPERIMENTAL: 'true'
+  IMAGE_NAME: ${{ secrets.DOCKER_USER }}/${{ vars.PACKAGE }}
+  IMAGE_NAME_REPOSITORY: ghcr.io/${{ github.repository }}
+
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    outputs:
+      released: ${{ steps.semantic.outputs.released }}
+      version: ${{ steps.read_version.outputs.version }}
+
+    strategy:
+      matrix:
+        node-version: [24.10.0]
+
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup npm registry auth
+        run: |
+          echo "@omnixys:registry=https://npm.pkg.github.com" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${OMNIXYS_TOKEN}" >> .npmrc
+        env:
+          OMNIXYS_TOKEN: ${{ secrets.OMNIXYS_TOKEN }}
+
+      - name: ⚙️ Enable Corepack (pnpm)
+        run: |
+          corepack enable
+
+      - name: ⚙️ Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          OMNIXYS_TOKEN: ${{ secrets.OMNIXYS_TOKEN }}
+
+      - name: 🚀 Semantic Release
+        id: semantic
+        run: |
+          OUTPUT=$(pnpm run release || true)
+          echo "$OUTPUT"
+      
+          if echo "$OUTPUT" | grep -q "Published"; then
+            echo "released=true" >> $GITHUB_OUTPUT
+          else
+            echo "released=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.OMNIXYS_TOKEN }}
+
+      - name: Read version
+        id: read_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          echo "CURRENT_VERSION=$VERSION" >> $GITHUB_ENV
+
+          echo "CURRENT_DATE=$(date -u +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Update repo variable
+        env:
+          GH_TOKEN: ${{ secrets.OMNIXYS_TOKEN }}
+        run: |
+          gh variable set CURRENT_VERSION \
+            --body "$CURRENT_VERSION" \
+            --repo omnixys/${{ vars.PACKAGE }}
+
+      - name: Update org variable
+        env:
+          GH_TOKEN: ${{ secrets.OMNIXYS_TOKEN }}
+        run: |
+          gh variable set CURRENT_DATE \
+            --body "$CURRENT_DATE" \
+            --org omnixys \
+            --visibility all
+
+  publish:
+    if: needs.release.outputs.released == 'true'
+    runs-on: ubuntu-latest
+    needs: release
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ensure latest main
+        run: |
+          git fetch origin main
+          git checkout origin/main
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 10.33.0
+
+      - name: Setup npm registry auth
+        run: |
+          echo "@omnixys:registry=https://npm.pkg.github.com" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${OMNIXYS_TOKEN}" >> .npmrc
+        env:
+          OMNIXYS_TOKEN: ${{ secrets.OMNIXYS_TOKEN }}
+
+      - run: pnpm install
+      - run: pnpm build
+
+      - name: Setup npm registry auth
+        run: |
+          echo "@omnixys:registry=https://npm.pkg.github.com" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${OMNIXYS_TOKEN}" >> .npmrc
+        env:
+          OMNIXYS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: pnpm publish --no-git-checks
+        env:
+          OMNIXYS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  push-docker:
+    needs: release
+    if: needs.release.outputs.released == 'true'
+    name: 🐳 Build & Push Multi-Arch Images (Docker)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24.10.0]
+
+    steps:
+      - name: 🧾 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup npm registry auth
+        run: |
+          echo "@omnixys:registry=https://npm.pkg.github.com" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${OMNIXYS_TOKEN}" >> .npmrc
+        env:
+          OMNIXYS_TOKEN: ${{ secrets.OMNIXYS_TOKEN }}
+
+      - name: 🔎 Check if Docker tag already exists
+        id: check_tag
+        run: |
+          set -e
+
+          echo "Checking if tag exists: $IMAGE_NAME:${CURRENT_VERSION}"
+
+          if docker manifest inspect "$IMAGE_NAME:${CURRENT_VERSION}" > /dev/null 2>&1; then
+            echo "Tag exists → skipping build"
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag does not exist → build required"
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          driver-opts: image=moby/buildkit:latest
+
+      - name: 🔑 Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: buildx-${{ github.sha }}
+          restore-keys: |
+            buildx-
+
+      - name: Build and Push Docker Image (Multi-Arch)
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: docker/build-push-action@v5
+        with:
+          secrets: |
+            omnixys_token=${{ secrets.OMNIXYS_TOKEN }}
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ needs.release.outputs.version }}
+            ${{ env.IMAGE_NAME }}:latest
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ needs.release.outputs.version }}
+            org.opencontainers.image.description=Omnixys Microservice – ${{ env.IMAGE_NAME }}
+            org.opencontainers.image.licenses=GPL-3.0-or-later
+          build-args: |
+            REVISION=${{ github.sha }}
+            CREATED=${{ vars.CURRENT_DATE }}
+            APP_VERSION=${{ needs.release.outputs.version }}
+            APP_NAME=${{ vars.PACKAGE }}
+            NODE_VERSION=${{ matrix.node-version }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign Docker Image with cosign (OIDC/GitHub)
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          cosign sign --yes --recursive ${{ env.IMAGE_NAME }}:${{ needs.release.outputs.version }}
+          cosign sign --yes --recursive ${{ env.IMAGE_NAME }}:latest
+
+  push-github:
+    needs: release
+    if: needs.release.outputs.released == 'true'
+    name: 🐳 Build & Push Multi-Arch Images (Github)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24.10.0]
+
+    steps:
+      - name: 🧾 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔎 Check if Docker tag already exists
+        id: check_tag
+        run: |
+          set -e
+
+          echo "Checking if tag exists: $IMAGE_NAME:${CURRENT_VERSION}"
+
+          if docker manifest inspect "$IMAGE_NAME:${CURRENT_VERSION}" > /dev/null 2>&1; then
+            echo "Tag exists → skipping build"
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag does not exist → build required"
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          driver-opts: image=moby/buildkit:latest
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Set up Docker Cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: buildx-${{ github.sha }}
+          restore-keys: |
+            buildx-
+
+      - name: Build and Push Docker Image (GHCR)
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: docker/build-push-action@v5
+        with:
+          secrets: |
+            omnixys_token=${{ secrets.OMNIXYS_TOKEN }}
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.IMAGE_NAME_REPOSITORY }}:${{ needs.release.outputs.version }}
+            ${{ env.IMAGE_NAME_REPOSITORY }}:latest
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ needs.release.outputs.version }}
+            org.opencontainers.image.description=Omnixys Microservice – ${{ env.IMAGE_NAME }}
+            org.opencontainers.image.licenses=GPL-3.0-or-later
+          build-args: |
+            REVISION=${{ github.sha }}
+            CREATED=${{ vars.CURRENT_DATE }}
+            APP_VERSION=${{ needs.release.outputs.version }}
+            APP_NAME=${{ vars.PACKAGE }}
+            NODE_VERSION=${{ matrix.node-version }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign Docker Image with cosign (OIDC/GitHub)
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          cosign sign --yes --recursive ${{ env.IMAGE_NAME_REPOSITORY }}:${{ needs.release.outputs.version }}
+          cosign sign --yes --recursive ${{ env.IMAGE_NAME_REPOSITORY }}:latest
+

@@ -1,0 +1,61 @@
+{
+  "name": "@omnixys/kafka-topic-manager",
+  "version": "3.0.0",
+  "description": "Executable Kafka/Redpanda topic reconciler for Omnixys infrastructure.",
+  "type": "module",
+  "private": false,
+  "packageManager": "pnpm@10.33.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "omnixys-kafka-topic-manager": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "Dockerfile",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prebuild": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "tsc -p tsconfig.json",
+    "test": "pnpm run build && node --test test/*.test.mjs",
+    "release": "semantic-release"
+  },
+  "keywords": [
+    "omnixys",
+    "kafka",
+    "redpanda",
+    "gitops"
+  ],
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@omnixys/kafka": "2.1.0"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^12.0.6",
+    "@semantic-release/npm": "^13.1.5",
+    "@semantic-release/release-notes-generator": "^14.1.0",
+    "@types/node": "^25.6.0",
+    "lint-staged": "^16.4.0",
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.4.2",
+    "semantic-release": "^25.0.3",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,37 @@
+name: Repo Default Label
+
+on:
+  pull_request:
+    types: [opened, reopened, labeled, synchronize]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  add-repo-label:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ensure repo default service label
+        uses: actions/github-script@v8
+        env:
+          SERVICE: ${{ vars.SERVICE }}
+        with:
+          script: |
+            const service = process.env.SERVICE;
+
+            if (!service) {
+              core.setFailed('SERVICE secret is not defined');
+              return;
+            }
+
+            const labels = context.payload.pull_request.labels.map(l => l.name);
+
+            if (!labels.includes(service)) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: [service]
+              });
+            }
