@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [1.0.4](https://github.com/omnixys/kafka-topic-manager/compare/v1.0.3...v1.0.4) (2026-06-27)
+
+### Rpk
+
+* **Rpk:** another one ([](https://github.com/omnixys/kafka-topic-manager/commit/f100db7604909c9885b56da0cca5d4f9612c3447))
+
 ## [1.0.3](https://github.com/omnixys/kafka-topic-manager/compare/v1.0.2...v1.0.3) (2026-06-27)
 
 ### Update
