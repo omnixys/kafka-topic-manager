@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [1.0.3](https://github.com/omnixys/kafka-topic-manager/compare/v1.0.2...v1.0.3) (2026-06-27)
+
+### Update
+
+* **Update:** update rpk-cli ([](https://github.com/omnixys/kafka-topic-manager/commit/350a72e63fe6fef1e92d6619029cba7b096fa57d))
+
 ## [1.0.2](https://github.com/omnixys/kafka-topic-manager/compare/v1.0.1...v1.0.2) (2026-06-27)
 
 ### Kafka
