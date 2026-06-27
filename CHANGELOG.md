@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## 1.0.0 (2026-06-27)
+
+### Other
+
+* **Other:** initial release ([](https://github.com/omnixys/kafka-topic-manager/commit/53992ad0207e4f203a1f8f509b05ae3929406ce5))
+
 ## [3.0.0](https://github.com/omnixys/kafka-topic-manager/compare/v2.0.0...v3.0.0) (2026-06-27)
 
 ### 3. try
