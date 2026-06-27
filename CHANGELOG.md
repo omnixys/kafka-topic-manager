@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [1.0.1](https://github.com/omnixys/kafka-topic-manager/compare/v1.0.0...v1.0.1) (2026-06-27)
+
+### Docker
+
+* **Docker:** Dockerfile ([](https://github.com/omnixys/kafka-topic-manager/commit/98e338dda22d8835948aa9614f4f611ff6fc55a4))
+
 ## 1.0.0 (2026-06-27)
 
 ### Other
