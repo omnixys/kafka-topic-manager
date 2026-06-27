@@ -15,7 +15,6 @@ import type { TopicManagerConfig } from "./config.js";
 
 export interface TopicAdminClient {
   clusterInfo(): Promise<CommandResult>;
-  listTopics(): Promise<CommandResult>;
   describeTopic(topic: string): Promise<CommandResult>;
   createTopic(input: {
     topic: string;
@@ -81,14 +80,6 @@ export async function reconcileTopics(
   }
 
   await waitForBroker(config, rpk, logger);
-
-  const listResult = await rpk.listTopics();
-  if (commandSucceeded(listResult)) {
-    logger.log(`Broker topic listing succeeded.`);
-  } else {
-    summary.warnings += 1;
-    logger.warn(`Broker topic listing failed: ${formatCommandError(listResult)}`);
-  }
 
   for (const topic of catalog.topics) {
     logger.log("");
@@ -206,20 +197,19 @@ export function detectMutableConfigDrift(
 }
 
 export function parseDescribeOutput(output: string): ParsedTopicDescription {
-  if (!output.trim()) {
-    return { config: {} };
-  }
-
-  try {
-    const parsed = JSON.parse(output) as unknown;
-    return {
-      partitions: extractNumber(parsed, ["partitions", "partition_count"]),
-      replicas: extractNumber(parsed, ["replicas", "replication_factor"]),
-      config: extractConfig(parsed),
-    };
-  } catch {
-    return { config: {} };
-  }
+  return {
+    partitions: extractDescribeNumber(output, [
+      /^\s*partitions\s+(\d+)\s*$/im,
+      /\bpartition\s*count\b\s*[:=]?\s*(\d+)/i,
+      /\bpartitioncount\b\s*[:=]?\s*(\d+)/i,
+    ]),
+    replicas: extractDescribeNumber(output, [
+      /^\s*replicas\s+(\d+)\s*$/im,
+      /\breplication\s*factor\b\s*[:=]?\s*(\d+)/i,
+      /\breplicationfactor\b\s*[:=]?\s*(\d+)/i,
+    ]),
+    config: extractDescribeConfig(output),
+  };
 }
 
 async function waitForBroker(
@@ -266,65 +256,44 @@ function detectImmutableDrift(
   return warnings;
 }
 
-function extractConfig(value: unknown): Record<string, string> {
+function extractDescribeConfig(output: string): Record<string, string> {
   const config: Record<string, string> = {};
 
-  const visit = (node: unknown): void => {
-    if (Array.isArray(node)) {
-      for (const item of node) {
-        visit(item);
-      }
-      return;
-    }
+  for (const key of KafkaTopicMutableConfigKeys) {
+    const escapedKey = escapeRegExp(key);
+    const patterns = [
+      new RegExp(`\\b${escapedKey}\\b\\s*[=:]\\s*([^,\\s]+)`, "i"),
+      new RegExp(`^\\s*${escapedKey}\\s+([^\\s]+)`, "im"),
+    ];
 
-    if (!node || typeof node !== "object") {
-      return;
-    }
-
-    const record = node as Record<string, unknown>;
-    if (typeof record.name === "string" && record.value !== undefined) {
-      config[record.name] = String(record.value);
-    }
-
-    for (const [key, nested] of Object.entries(record)) {
-      if (
-        typeof nested === "string" &&
-        KafkaTopicMutableConfigKeys.includes(
-          key as (typeof KafkaTopicMutableConfigKeys)[number],
-        )
-      ) {
-        config[key] = nested;
-      } else if (key.toLowerCase().includes("config")) {
-        visit(nested);
+    for (const pattern of patterns) {
+      const match = output.match(pattern);
+      if (match?.[1]) {
+        config[key] = match[1].trim();
+        break;
       }
     }
-  };
+  }
 
-  visit(value);
   return config;
 }
 
-function extractNumber(value: unknown, keys: string[]): number | undefined {
-  if (!value || typeof value !== "object") {
-    return undefined;
-  }
-
-  const record = value as Record<string, unknown>;
-  for (const key of keys) {
-    const candidate = record[key];
-    if (typeof candidate === "number") {
-      return candidate;
-    }
-  }
-
-  for (const nested of Object.values(record)) {
-    const found = extractNumber(nested, keys);
-    if (found !== undefined) {
-      return found;
+function extractDescribeNumber(
+  output: string,
+  patterns: RegExp[],
+): number | undefined {
+  for (const pattern of patterns) {
+    const match = output.match(pattern);
+    if (match?.[1]) {
+      return Number(match[1]);
     }
   }
 
   return undefined;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function formatCommandError(result: CommandResult): string {

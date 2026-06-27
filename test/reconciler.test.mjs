@@ -2,6 +2,7 @@ import { KafkaTopics } from "@omnixys/kafka";
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  RpkClient,
   detectMutableConfigDrift,
   parseDescribeOutput,
   reconcileTopics,
@@ -41,15 +42,21 @@ test("detectMutableConfigDrift reports desired mutable differences", () => {
   ]);
 });
 
-test("parseDescribeOutput extracts common config shapes", () => {
+test("parseDescribeOutput extracts rpk text output", () => {
   const parsed = parseDescribeOutput(
-    JSON.stringify({
-      summary: { partitions: 3, replicas: 1 },
-      configs: [
-        { name: "cleanup.policy", value: "delete" },
-        { name: "retention.ms", value: "604800000" },
-      ],
-    }),
+    `
+SUMMARY
+=======
+NAME        notification.retry.whatsapp
+PARTITIONS  3
+REPLICAS    1
+
+CONFIGS
+=======
+KEY             VALUE
+cleanup.policy  delete
+retention.ms    604800000
+`,
   );
 
   assert.equal(parsed.partitions, 3);
@@ -65,16 +72,12 @@ test("reconcileTopics creates missing topics and skips existing topics", async (
       calls.push(["clusterInfo"]);
       return ok("{}");
     },
-    async listTopics() {
-      calls.push(["listTopics"]);
-      return ok("[]");
-    },
     async describeTopic(topic) {
       calls.push(["describeTopic", topic]);
       if (topic === KafkaTopics.user.createUser) {
         return missing();
       }
-      return ok(JSON.stringify({ configs: [] }));
+      return ok("");
     },
     async createTopic(input) {
       calls.push(["createTopic", input.topic]);
@@ -101,6 +104,78 @@ test("reconcileTopics creates missing topics and skips existing topics", async (
 
   assert.equal(summary.created, 1);
   assert.equal(calls.some((call) => call[0] === "createTopic"), true);
+});
+
+test("reconcileTopics treats non-missing describe failures as errors", async () => {
+  const calls = [];
+  const rpk = {
+    async clusterInfo() {
+      calls.push(["clusterInfo"]);
+      return ok("");
+    },
+    async describeTopic(topic) {
+      calls.push(["describeTopic", topic]);
+      return { code: 2, stdout: "", stderr: "authorization failed" };
+    },
+    async createTopic(input) {
+      calls.push(["createTopic", input.topic]);
+      return ok("");
+    },
+    async alterTopicConfig(topic, config) {
+      calls.push(["alterTopicConfig", topic, config]);
+      return ok("");
+    },
+  };
+
+  await assert.rejects(
+    reconcileTopics(
+      {
+        brokers: ["localhost:9092"],
+        rpkConfigOptions: [],
+        mutableConfig: false,
+        dryRun: false,
+        waitAttempts: 1,
+        waitSleepSeconds: 0,
+      },
+      rpk,
+      silentLogger,
+    ),
+    /finished with errors/,
+  );
+
+  assert.equal(calls.some((call) => call[0] === "createTopic"), false);
+});
+
+test("RpkClient describes topics without format flags", async () => {
+  const calls = [];
+  const runner = {
+    async run(command, args) {
+      calls.push([command, args]);
+      return ok("");
+    },
+  };
+  const client = new RpkClient(
+    ["localhost:9092"],
+    ["tls.enabled=true"],
+    runner,
+  );
+
+  await client.describeTopic("notification.retry.whatsapp");
+
+  assert.deepEqual(calls, [
+    [
+      "rpk",
+      [
+        "-X",
+        "brokers=localhost:9092",
+        "-X",
+        "tls.enabled=true",
+        "topic",
+        "describe",
+        "notification.retry.whatsapp",
+      ],
+    ],
+  ]);
 });
 
 function ok(stdout) {

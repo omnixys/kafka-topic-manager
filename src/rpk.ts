@@ -44,12 +44,8 @@ export class RpkClient {
     return this.run(["cluster", "info"]);
   }
 
-  async listTopics(): Promise<CommandResult> {
-    return this.run(["topic", "list", "--format", "json"]);
-  }
-
   async describeTopic(topic: string): Promise<CommandResult> {
-    return this.run(["topic", "describe", topic, "--format", "json"]);
+    return this.run(["topic", "describe", topic]);
   }
 
   async createTopic(input: {
