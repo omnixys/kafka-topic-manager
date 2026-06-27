@@ -178,6 +178,50 @@ test("RpkClient describes topics without format flags", async () => {
   ]);
 });
 
+test("RpkClient creates topics with rpk v24.1.6 supported flags", async () => {
+  const calls = [];
+  const runner = {
+    async run(command, args) {
+      calls.push([command, args]);
+      return ok("");
+    },
+  };
+  const client = new RpkClient(["localhost:9092"], [], runner);
+
+  await client.createTopic({
+    topic: "notification.retry.whatsapp",
+    partitions: 3,
+    replicas: 1,
+    config: {
+      "retention.ms": "604800000",
+      "cleanup.policy": "delete",
+    },
+    dryRun: true,
+  });
+
+  assert.deepEqual(calls, [
+    [
+      "rpk",
+      [
+        "-X",
+        "brokers=localhost:9092",
+        "topic",
+        "create",
+        "notification.retry.whatsapp",
+        "--partitions",
+        "3",
+        "--replicas",
+        "1",
+        "--dry",
+        "--topic-config",
+        "cleanup.policy=delete",
+        "--topic-config",
+        "retention.ms=604800000",
+      ],
+    ],
+  ]);
+});
+
 function ok(stdout) {
   return { code: 0, stdout, stderr: "" };
 }

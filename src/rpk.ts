@@ -59,7 +59,6 @@ export class RpkClient {
       "topic",
       "create",
       input.topic,
-      "--if-not-exists",
       "--partitions",
       String(input.partitions),
       "--replicas",
