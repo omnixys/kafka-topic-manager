@@ -106,6 +106,53 @@ test("reconcileTopics creates missing topics and skips existing topics", async (
   assert.equal(calls.some((call) => call[0] === "createTopic"), true);
 });
 
+test("reconcileTopics creates derived retry and DLQ topics from the expanded catalog", async () => {
+  const missingTopics = new Set([
+    `${KafkaTopics.user.createUser}.retry`,
+    `${KafkaTopics.user.createUser}.dlq`,
+  ]);
+  const created = [];
+  const rpk = {
+    async clusterInfo() {
+      return ok("{}");
+    },
+    async describeTopic(topic) {
+      return missingTopics.has(topic) ? missing() : ok("");
+    },
+    async createTopic(input) {
+      created.push(input);
+      return ok("");
+    },
+    async alterTopicConfig() {
+      return ok("");
+    },
+  };
+
+  const summary = await reconcileTopics(
+    {
+      brokers: ["localhost:9092"],
+      rpkConfigOptions: [],
+      mutableConfig: false,
+      dryRun: false,
+      waitAttempts: 1,
+      waitSleepSeconds: 0,
+    },
+    rpk,
+    silentLogger,
+  );
+
+  const retry = created.find(
+    (entry) => entry.topic === `${KafkaTopics.user.createUser}.retry`,
+  );
+  const dlq = created.find(
+    (entry) => entry.topic === `${KafkaTopics.user.createUser}.dlq`,
+  );
+
+  assert.equal(summary.created, 2);
+  assert.equal(retry?.config["retention.ms"], "86400000");
+  assert.equal(dlq?.config["retention.ms"], "2592000000");
+});
+
 test("reconcileTopics treats non-missing describe failures as errors", async () => {
   const calls = [];
   const rpk = {

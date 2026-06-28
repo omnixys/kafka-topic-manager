@@ -1,7 +1,7 @@
 import {
   KafkaTopicMutableConfigKeys,
   type KafkaTopicCatalogEntry,
-  getKafkaTopicCatalog,
+  getKafkaTopicReconciliationCatalog,
   validateKafkaTopicCatalog,
 } from "@omnixys/kafka";
 import { setTimeout as sleep } from "node:timers/promises";
@@ -56,7 +56,7 @@ export async function reconcileTopics(
   rpk: TopicAdminClient = new RpkClient(config.brokers, config.rpkConfigOptions),
   logger: TopicManagerLogger = consoleLogger,
 ): Promise<TopicManagerSummary> {
-  const catalog = getKafkaTopicCatalog();
+  const catalog = getKafkaTopicReconciliationCatalog();
   const validation = validateKafkaTopicCatalog(catalog);
   const summary: TopicManagerSummary = {
     total: catalog.topics.length,

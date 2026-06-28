@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@omnixys/kafka':
-        specifier: 2.1.0
-        version: 2.1.0(16dc5010932fde1301c07fbc0421a382)
+        specifier: 2.1.1
+        version: 2.1.1(16dc5010932fde1301c07fbc0421a382)
     devDependencies:
       '@commitlint/cli':
-        specifier: ^20.5.0
+        specifier: ^20.5.3
         version: 20.5.3(@types/node@25.9.4)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@5.9.3)
       '@commitlint/config-conventional':
-        specifier: ^20.4.2
+        specifier: ^20.5.3
         version: 20.5.3
       '@semantic-release/changelog':
         specifier: ^6.0.3
@@ -28,22 +28,22 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(semantic-release@25.0.5(typescript@5.9.3))
       '@semantic-release/github':
-        specifier: ^12.0.6
+        specifier: ^12.0.8
         version: 12.0.8(semantic-release@25.0.5(typescript@5.9.3))
       '@semantic-release/npm':
         specifier: ^13.1.5
         version: 13.1.5(semantic-release@25.0.5(typescript@5.9.3))
       '@semantic-release/release-notes-generator':
-        specifier: ^14.1.0
+        specifier: ^14.1.1
         version: 14.1.1(semantic-release@25.0.5(typescript@5.9.3))
       '@types/node':
-        specifier: ^25.6.0
+        specifier: ^25.9.4
         version: 25.9.4
       lint-staged:
         specifier: ^16.4.0
         version: 16.4.0
       semantic-release:
-        specifier: ^25.0.3
+        specifier: ^25.0.5
         version: 25.0.5(typescript@5.9.3)
       typescript:
         specifier: ^5.9.3
@@ -399,8 +399,8 @@ packages:
     peerDependencies:
       '@nestjs/common': ^11.1.27
 
-  '@omnixys/kafka@2.1.0':
-    resolution: {integrity: sha512-Qcn1Fr1rxIkUG+V9G31Je71S9iDx77gy2WtyjxnDZl9GtgbqhEx+m78jivHJ75hKrpHPqULietJFtiXMoxgxdg==, tarball: https://npm.pkg.github.com/download/@omnixys/kafka/2.1.0/dba285d71ed8c49fbe3cb4819c1375515ec0415e}
+  '@omnixys/kafka@2.1.1':
+    resolution: {integrity: sha512-ESFUxs4ahnST7xsOazE4taaKPFjgvfq4jvNbDMQW5euKKm9BTdxJxykMDHbEOUfJjMprHmWmmXLNYTdgf/eQ2w==, tarball: https://npm.pkg.github.com/download/@omnixys/kafka/2.1.1/90704fb5841f460f6031bae1fcb204f632a0fe90}
     peerDependencies:
       '@nestjs/common': ^11.0.0
       '@nestjs/core': ^11.1.17
@@ -1975,8 +1975,8 @@ packages:
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
-  js-yaml@4.2.0:
-    resolution: {integrity: sha512-ePWsvanv0DWuDRsW8dnt+R4jQ31SCRCQ7hhNcPXZPsoBZiemuZNYGf7adZdqX2D86j6rvKp3RpCxVTSb8WQlOw==}
+  js-yaml@4.3.0:
+    resolution: {integrity: sha512-1td788aAnnZ5qs7V2QIRl1owjtYpbKt749Y3xauqQgwIIGF/xXWz1wMTEBx5O3LK3lXLVuqXPdPxj2BoFHaW9Q==}
     hasBin: true
 
   jsbn@1.1.0:
@@ -3498,7 +3498,7 @@ snapshots:
       '@nestjs/common': 11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)
       zod: 4.4.3
 
-  '@omnixys/kafka@2.1.0(16dc5010932fde1301c07fbc0421a382)':
+  '@omnixys/kafka@2.1.1(16dc5010932fde1301c07fbc0421a382)':
     dependencies:
       '@nestjs/common': 11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.27(@nestjs/common@11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -4765,7 +4765,7 @@ snapshots:
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
-      js-yaml: 4.2.0
+      js-yaml: 4.3.0
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.9.3
@@ -5370,7 +5370,7 @@ snapshots:
 
   js-tokens@4.0.0: {}
 
-  js-yaml@4.2.0:
+  js-yaml@4.3.0:
     dependencies:
       argparse: 2.0.1
 
