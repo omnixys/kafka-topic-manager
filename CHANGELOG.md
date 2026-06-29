@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [1.0.6](https://github.com/omnixys/kafka-topic-manager/compare/v1.0.5...v1.0.6) (2026-06-29)
+
+### Deps
+
+* **Deps:** update kafka dependency ([](https://github.com/omnixys/kafka-topic-manager/commit/e182a4bd5d3038af91001ba4eb49ae736c574930))
+
 ## [1.0.5](https://github.com/omnixys/kafka-topic-manager/compare/v1.0.4...v1.0.5) (2026-06-28)
 
 ### Retry
