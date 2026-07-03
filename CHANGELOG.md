@@ -3,6 +3,17 @@
 All notable changes in this project will be documented in this file.
 
 
+## [1.0.8](https://github.com/omnixys/kafka-topic-manager/compare/v1.0.7...v1.0.8) (2026-07-03)
+
+### Deps
+
+* **Deps:** update omnixys dependencies ([](https://github.com/omnixys/kafka-topic-manager/commit/ec6c2facd7ae3b1d1be3be6187ad15697d355f3d))
+* **Deps:** Update package.json ([](https://github.com/omnixys/kafka-topic-manager/commit/ae20a6a3a8cbb41067eb9d93e2359966b7b87a8b))
+
+### Other
+
+* **Other:** Merge branch 'main' of https://github.com/omnixys/kafka-topic-manager ([](https://github.com/omnixys/kafka-topic-manager/commit/99fcdecbc58c0f06e44b6fb2273918a756d619af))
+
 ## [1.0.7](https://github.com/omnixys/kafka-topic-manager/compare/v1.0.6...v1.0.7) (2026-07-03)
 
 ### Deps
