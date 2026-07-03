@@ -1,6 +1,6 @@
 {
   "name": "@omnixys/kafka-topic-manager",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Executable Kafka/Redpanda topic reconciler for Omnixys infrastructure.",
   "type": "module",
   "private": false,
