@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@omnixys/kafka':
-        specifier: 2.1.2
-        version: 2.1.2(16dc5010932fde1301c07fbc0421a382)
+        specifier: 2.2.0
+        version: 2.2.0(16dc5010932fde1301c07fbc0421a382)
     devDependencies:
       '@commitlint/cli':
         specifier: ^20.5.3
@@ -399,8 +399,8 @@ packages:
     peerDependencies:
       '@nestjs/common': ^11.1.27
 
-  '@omnixys/kafka@2.1.2':
-    resolution: {integrity: sha512-rUE/CXBjb77alNYZnnsZVLrMG49NnwawwwGTPxBbIMcilFGQEteaTXPfIDiVafUJ68RPoxs9f5ECIcmpErVLeg==, tarball: https://npm.pkg.github.com/download/@omnixys/kafka/2.1.2/a896662c1ed3ceefe238a9857657b989120bc572}
+  '@omnixys/kafka@2.2.0':
+    resolution: {integrity: sha512-/ODec6bnxSUnWq/4RoPO1nzMqPNteqO+U8ZHT9L/2gs/T+imQefBtZfec26o5SGAeU7AjORjBlFCKak/1FGdDQ==, tarball: https://npm.pkg.github.com/download/@omnixys/kafka/2.2.0/52ff739a6bc0c33f87f193236bf24df18aaa45d2}
     peerDependencies:
       '@nestjs/common': ^11.0.0
       '@nestjs/core': ^11.1.17
@@ -3498,7 +3498,7 @@ snapshots:
       '@nestjs/common': 11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)
       zod: 4.4.3
 
-  '@omnixys/kafka@2.1.2(16dc5010932fde1301c07fbc0421a382)':
+  '@omnixys/kafka@2.2.0(16dc5010932fde1301c07fbc0421a382)':
     dependencies:
       '@nestjs/common': 11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.27(@nestjs/common@11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)
