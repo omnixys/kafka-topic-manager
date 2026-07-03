@@ -42,7 +42,7 @@
   ],
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@omnixys/kafka": "2.2.1"
+    "@omnixys/kafka": "2.2.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.3",
