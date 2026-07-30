@@ -3,7 +3,7 @@ import {
   type KafkaTopicCatalogEntry,
   getKafkaTopicReconciliationCatalog,
   validateKafkaTopicCatalog,
-} from "@omnixys/kafka";
+} from "@omnixys/kafka-ts";
 import { setTimeout as sleep } from "node:timers/promises";
 import {
   RpkClient,
