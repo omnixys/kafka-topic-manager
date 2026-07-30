@@ -1,4 +1,4 @@
-# @omnixys/kafka-ts-topic-manager
+# @omnixys/kafka-topic-manager
 
 Executable Kafka/Redpanda topic reconciler for Omnixys infrastructure.
 
@@ -24,6 +24,6 @@ The manager expects `rpk` to be present in `PATH`. The supplied Dockerfile copie
 
 ## Version Line
 
-`@omnixys/kafka-ts-topic-manager` must be released with the same version as
+`@omnixys/kafka-topic-manager` must be released with the same version as
 `@omnixys/kafka-ts`. The package build runs `check:version-line` before compiling
 and fails if the dependency does not exactly match the manager version.
