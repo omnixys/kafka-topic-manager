@@ -3,6 +3,16 @@
 All notable changes in this project will be documented in this file.
 
 
+## [2.1.3](https://github.com/omnixys/kafka-topic-manager/compare/v2.1.2...v2.1.3) (2026-07-30)
+
+### Name
+
+* **Name:** rename package ([](https://github.com/omnixys/kafka-topic-manager/commit/3ba52408e2bcffd8e908c4d457a9f61048135117))
+
+### Other
+
+* **Other:** Merge branch 'main' of https://github.com/omnixys/kafka-topic-manager ([](https://github.com/omnixys/kafka-topic-manager/commit/997c3f5c238712f1ff18abd958720b40ff2c1338))
+
 ## [2.1.2](https://github.com/omnixys/kafka-topic-manager/compare/v2.1.1...v2.1.2) (2026-07-30)
 
 ### Deps
