@@ -15,9 +15,17 @@ import type { TopicManagerConfig } from "./config.js";
 
 export interface TopicAdminClient {
   clusterInfo(): Promise<CommandResult>;
+  listTopics?(): Promise<CommandResult>;
   describeTopic(topic: string): Promise<CommandResult>;
   createTopic(input: {
     topic: string;
+    partitions: number;
+    replicas: number;
+    config: Record<string, string | number | boolean>;
+    dryRun?: boolean;
+  }): Promise<CommandResult>;
+  createTopics?(input: {
+    topics: string[];
     partitions: number;
     replicas: number;
     config: Record<string, string | number | boolean>;
@@ -81,13 +89,55 @@ export async function reconcileTopics(
 
   await waitForBroker(config, rpk, logger);
 
+  let existingTopics: Set<string> | undefined;
+  if (rpk.listTopics) {
+    const listed = await rpk.listTopics();
+    if (!commandSucceeded(listed)) {
+      summary.errors += 1;
+      logger.error(`Topic list failed: ${formatCommandError(listed)}`);
+      printSummary(summary, logger);
+      throw new Error("Kafka topic reconciliation finished with errors.");
+    }
+    existingTopics = parseTopicList(listed.stdout);
+  }
+
+  const missingBatches = new Map<
+    string,
+    {
+      topics: string[];
+      partitions: number;
+      replicas: number;
+      config: Record<string, string | number | boolean>;
+    }
+  >();
+
   for (const topic of catalog.topics) {
     logger.log("");
     logger.log(`Reconciling topic: ${topic.topic}`);
 
-    const describe = await rpk.describeTopic(topic.topic);
+    const describe = existingTopics?.has(topic.topic)
+      ? await rpk.describeTopic(topic.topic)
+      : existingTopics
+        ? missing()
+        : await rpk.describeTopic(topic.topic);
 
     if (topicMissing(describe)) {
+      if (rpk.createTopics) {
+        const key = topicBatchKey(topic);
+        const batch = missingBatches.get(key);
+        if (batch) {
+          batch.topics.push(topic.topic);
+        } else {
+          missingBatches.set(key, {
+            topics: [topic.topic],
+            partitions: topic.partitions,
+            replicas: topic.replicas,
+            config: sortConfig(topic.config),
+          });
+        }
+        continue;
+      }
+
       logger.log(`Creating topic: ${topic.topic}`);
       const create = await rpk.createTopic({
         topic: topic.topic,
@@ -156,6 +206,27 @@ export async function reconcileTopics(
     summary.updated += 1;
   }
 
+  if (rpk.createTopics) {
+    for (const [, batch] of [...missingBatches.entries()].sort(([a], [b]) =>
+      a.localeCompare(b),
+    )) {
+      batch.topics.sort();
+      logger.log(
+        `Creating topic batch: count=${batch.topics.length} partitions=${batch.partitions} replicas=${batch.replicas}`,
+      );
+      const create = await rpk.createTopics({
+        ...batch,
+        dryRun: config.dryRun,
+      });
+      if (!commandSucceeded(create)) {
+        summary.errors += 1;
+        logger.error(`Batch create failed: ${formatCommandError(create)}`);
+        continue;
+      }
+      summary.created += batch.topics.length;
+    }
+  }
+
   printSummary(summary, logger);
 
   if (summary.errors > 0) {
@@ -210,6 +281,33 @@ export function parseDescribeOutput(output: string): ParsedTopicDescription {
     ]),
     config: extractDescribeConfig(output),
   };
+}
+
+export function parseTopicList(output: string): Set<string> {
+  return new Set(
+    output
+      .split("\n")
+      .map((line) => line.trim().split(/\s+/, 1)[0])
+      .filter((name): name is string => Boolean(name) && name !== "NAME"),
+  );
+}
+
+function topicBatchKey(topic: KafkaTopicCatalogEntry): string {
+  return JSON.stringify({
+    partitions: topic.partitions,
+    replicas: topic.replicas,
+    config: sortConfig(topic.config),
+  });
+}
+
+function sortConfig(
+  config: Record<string, string | number | boolean>,
+): Record<string, string | number | boolean> {
+  return Object.fromEntries(Object.entries(config).sort(([a], [b]) => a.localeCompare(b)));
+}
+
+function missing(): CommandResult {
+  return { code: 1, stdout: "", stderr: "unknown topic or partition" };
 }
 
 async function waitForBroker(

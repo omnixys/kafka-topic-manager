@@ -44,6 +44,10 @@ export class RpkClient {
     return this.run(["cluster", "info"]);
   }
 
+  async listTopics(): Promise<CommandResult> {
+    return this.run(["topic", "list"]);
+  }
+
   async describeTopic(topic: string): Promise<CommandResult> {
     return this.run(["topic", "describe", topic]);
   }
@@ -55,10 +59,26 @@ export class RpkClient {
     config: Record<string, string | number | boolean>;
     dryRun?: boolean;
   }): Promise<CommandResult> {
+    return this.createTopics({
+      topics: [input.topic],
+      partitions: input.partitions,
+      replicas: input.replicas,
+      config: input.config,
+      dryRun: input.dryRun,
+    });
+  }
+
+  async createTopics(input: {
+    topics: string[];
+    partitions: number;
+    replicas: number;
+    config: Record<string, string | number | boolean>;
+    dryRun?: boolean;
+  }): Promise<CommandResult> {
     const args = [
       "topic",
       "create",
-      input.topic,
+      ...input.topics,
       "--partitions",
       String(input.partitions),
       "--replicas",
