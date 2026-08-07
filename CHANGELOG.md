@@ -3,6 +3,14 @@
 All notable changes in this project will be documented in this file.
 
 
+## [2.1.5](https://github.com/omnixys/kafka-topic-manager/compare/v2.1.4...v2.1.5) (2026-08-07)
+
+### Kafka
+
+* **Kafka:** batch missing topic creation ([](https://github.com/omnixys/kafka-topic-manager/commit/2b29c2d90d018d581f81e97a71a3fde3acd8c39d))
+* **Kafka:** batch missing topic creation ([](https://github.com/omnixys/kafka-topic-manager/commit/d9b9e2a4298d2c59872e3331bfd7c0d06edfbf88))
+* **Kafka:** batch missing topic creation ([](https://github.com/omnixys/kafka-topic-manager/commit/82a177ac5d5e721dddb02583a78035954af89c4d))
+
 ## [2.1.4](https://github.com/omnixys/kafka-topic-manager/compare/v2.1.3...v2.1.4) (2026-08-01)
 
 ### Deps
