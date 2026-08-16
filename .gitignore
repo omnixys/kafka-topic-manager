@@ -64,3 +64,7 @@ coverage/
 
 .npmrc
 .secrets
+# Managed by the Omnixys repository-policy rollout: track VS Code workspace config
+!.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
