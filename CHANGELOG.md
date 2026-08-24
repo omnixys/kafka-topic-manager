@@ -3,6 +3,17 @@
 All notable changes in this project will be documented in this file.
 
 
+## [2.1.6](https://github.com/omnixys/kafka-topic-manager/compare/v2.1.5...v2.1.6) (2026-08-24)
+
+### Agent
+
+* **Agent:** add repository development instructions ([](https://github.com/omnixys/kafka-topic-manager/commit/fc744b7ca0c14522784263b529fa8b0853eb0f8b))
+
+### Kafka
+
+* **Kafka:** update dependency ([](https://github.com/omnixys/kafka-topic-manager/commit/a3bc5ee603a9bc84a647a3320bb070b7f5cdd2a0))
+* **Kafka:** update dependency ([](https://github.com/omnixys/kafka-topic-manager/commit/4f640a61cc6b2b94c890e9fe63f016938a5a3f9c))
+
 ## [2.1.5](https://github.com/omnixys/kafka-topic-manager/compare/v2.1.4...v2.1.5) (2026-08-07)
 
 ### Kafka
