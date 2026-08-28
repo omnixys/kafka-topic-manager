@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@omnixys/kafka-ts':
-        specifier: 3.3.0
-        version: 3.3.0(85e6deb2a6891178c32b7bd3ae7b9125)
+        specifier: 3.3.1
+        version: 3.3.1(85e6deb2a6891178c32b7bd3ae7b9125)
     devDependencies:
       '@commitlint/cli':
         specifier: ^20.5.3
@@ -399,16 +399,16 @@ packages:
     peerDependencies:
       '@nestjs/common': ^11.1.27
 
-  '@omnixys/kafka-ts@3.3.0':
-    resolution: {integrity: sha512-GE1dbHXLy2zctqc2clfMn0tss/uzZbMFLjwEhpeS2PtRcI0xxqiQiJNcV6+aIqUUdsnp1aJMJ5de1dGzUtocpQ==, tarball: https://npm.pkg.github.com/download/@omnixys/kafka-ts/3.3.0/1f17b7e5cd9febb82ebd526781fceebfbe46cbea}
+  '@omnixys/kafka-ts@3.3.1':
+    resolution: {integrity: sha512-EiRfOX+19F5KAWqpPIQrJaSIenVCp/SDbRmgPyzC8eROyMYmzBoLpFN+vT2HtbqtFfLGD2sEhMUmNnePg65HEg==, tarball: https://npm.pkg.github.com/download/@omnixys/kafka-ts/3.3.1/73f88168af9c4227565f409d8d5e9d72d39d699b}
     peerDependencies:
       '@nestjs/common': ^11.0.0
       '@nestjs/core': ^11.1.17
-      '@omnixys/cache-ts': ^3.3.0
-      '@omnixys/context-ts': ^3.2.1
-      '@omnixys/contracts-ts': ^3.3.0
-      '@omnixys/logger-ts': ^3.2.5
-      '@omnixys/observability-ts': ^3.4.1
+      '@omnixys/cache-ts': ^3.3.1
+      '@omnixys/context-ts': ^3.2.2
+      '@omnixys/contracts-ts': ^3.4.0
+      '@omnixys/logger-ts': ^3.2.7
+      '@omnixys/observability-ts': ^3.4.2
 
   '@omnixys/logger-ts@3.2.1':
     resolution: {integrity: sha512-vdvbAGIOaCt4l/x48a6iCVHtdKyvJpi93LGb8+kZtB//F8Og/K0KXw4vDy26CPUZ9SmHPqsKyWd53KOYC0TTGQ==, tarball: https://npm.pkg.github.com/download/@omnixys/logger-ts/3.2.1/2e81bb405471006e462aab0edcbc8de891e3bdcf}
@@ -3583,7 +3583,7 @@ snapshots:
       '@nestjs/common': 11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)
       zod: 4.4.3
 
-  '@omnixys/kafka-ts@3.3.0(85e6deb2a6891178c32b7bd3ae7b9125)':
+  '@omnixys/kafka-ts@3.3.1(85e6deb2a6891178c32b7bd3ae7b9125)':
     dependencies:
       '@nestjs/common': 11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.27(@nestjs/common@11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)
