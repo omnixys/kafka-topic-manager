@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [2.1.7](https://github.com/omnixys/kafka-topic-manager/compare/v2.1.6...v2.1.7) (2026-08-28)
+
+### Deps
+
+* **Deps:** update contracts-ts ([](https://github.com/omnixys/kafka-topic-manager/commit/a3e30eabb77112cad91b38e582095730327de6a6))
+
 ## [2.1.6](https://github.com/omnixys/kafka-topic-manager/compare/v2.1.5...v2.1.6) (2026-08-24)
 
 ### Agent
