@@ -3,6 +3,27 @@
 All notable changes in this project will be documented in this file.
 
 
+## [3.0.0](https://github.com/omnixys/kafka-topic-manager/compare/v2.1.7...v3.0.0) (2026-09-02)
+
+### Ci
+
+* **Ci:** add missing labeler and dependabot config to match contracts ([](https://github.com/omnixys/kafka-topic-manager/commit/28d426efbfab327bafda9bf4e2cb91761bbf03e4))
+* **Ci:** add PR build check workflow for main ([](https://github.com/omnixys/kafka-topic-manager/commit/176e266486abc6c10061320d01a45fcc545ffda6))
+* **Ci:** add npm registry auth before install in release workflow ([](https://github.com/omnixys/kafka-topic-manager/commit/d65d4dcb975a6bf45d296c33caafa67599eadc60))
+
+### Deps
+
+* **Deps:** update omnixys deps ([](https://github.com/omnixys/kafka-topic-manager/commit/f49969eda097cf9f9a709e0140484fafee77d4b7))
+* **Deps:** update omnixys deps ([](https://github.com/omnixys/kafka-topic-manager/commit/9cb335cb7f2eb9267d25e9fc7af66db04d44f4b5))
+
+### Other
+
+* **Other:** Merge pull request #1 from omnixys/migration/uuid-v7 ([](https://github.com/omnixys/kafka-topic-manager/commit/a489a6565adb1086dcabf8644ed85b8cfb0f6b30)), closes [#1](https://github.com/omnixys/kafka-topic-manager/issues/1)
+
+### Runtime
+
+* **Runtime:** require node 26.8.1 and pnpm 11.24.0 ([](https://github.com/omnixys/kafka-topic-manager/commit/9aa8cef8c2553bbf26545e06081ce57c48d0ce32))
+
 ## [2.1.7](https://github.com/omnixys/kafka-topic-manager/compare/v2.1.6...v2.1.7) (2026-08-28)
 
 ### Deps
