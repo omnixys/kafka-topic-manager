@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [3.0.1](https://github.com/omnixys/kafka-topic-manager/compare/v3.0.0...v3.0.1) (2026-09-02)
+
+### Release
+
+* **Release:** Update release.yml ([](https://github.com/omnixys/kafka-topic-manager/commit/7d8b18a8588442dc30ef0a6d3a115bdff068b483))
+
 ## [3.0.0](https://github.com/omnixys/kafka-topic-manager/compare/v2.1.7...v3.0.0) (2026-09-02)
 
 ### Ci
