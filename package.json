@@ -4,7 +4,7 @@
   "description": "Executable Kafka/Redpanda topic reconciler for Omnixys infrastructure.",
   "type": "module",
   "private": false,
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.24.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -26,7 +26,7 @@
     "registry": "https://npm.pkg.github.com"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=26.8.1 <27"
   },
   "scripts": {
     "prebuild": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",

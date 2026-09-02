@@ -9,7 +9,7 @@
 
 - Kind: Shared Package
 - Package: `@omnixys/kafka-topic-manager` (version: 2.1.5)
-- Runtime: Node >=20 (pnpm >=10.33.0)
+- Runtime: Node >=26.8.1 (pnpm >=11.24.0)
 - Description: Omnixys Kafka topic manager for TypeScript.
 - Architecture: src/ Kafka topic management
 - Database: n/a; Migrations: n/a
