@@ -64,23 +64,6 @@ jobs:
           echo "CURRENT_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
           echo "CURRENT_DATE=$(date -u +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      - name: Update repo variable
-        env:
-          GH_TOKEN: ${{ secrets.OMNIXYS_TOKEN }}
-        run: |
-          gh variable set CURRENT_VERSION \
-            --body "$CURRENT_VERSION" \
-            --repo omnixys/${{ vars.PACKAGE }}-ts
-
-      - name: Update org variable
-        env:
-          GH_TOKEN: ${{ secrets.OMNIXYS_TOKEN }}
-        run: |
-          gh variable set CURRENT_DATE \
-            --body "$CURRENT_DATE" \
-            --org omnixys \
-            --visibility all
-
   publish:
     if: needs.release.outputs.released == 'true'
     runs-on: ubuntu-latest
