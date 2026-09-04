@@ -14,7 +14,8 @@ RUN --mount=type=secret,id=omnixys_token \
     TOKEN=$(cat /run/secrets/omnixys_token) && \
     echo "@omnixys:registry=https://npm.pkg.github.com" > .npmrc && \
     echo "//npm.pkg.github.com/:_authToken=${TOKEN}" >> .npmrc && \
-    pnpm install --frozen-lockfile --ignore-scripts
+    pnpm install --frozen-lockfile --ignore-scripts && \
+    rm -f .npmrc
 
 
 RUN corepack enable \
