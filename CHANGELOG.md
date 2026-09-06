@@ -3,6 +3,17 @@
 All notable changes in this project will be documented in this file.
 
 
+## [3.1.2](https://github.com/omnixys/kafka-topic-manager/compare/v3.1.1...v3.1.2) (2026-09-06)
+
+### Ci
+
+* **Ci:** add docker ci ([](https://github.com/omnixys/kafka-topic-manager/commit/70aeece653f32d6820f11c884015a555b2f3b2b5))
+
+### Other
+
+* **Other:** Merge branch 'main' of https://github.com/omnixys/kafka-topic-manager ([](https://github.com/omnixys/kafka-topic-manager/commit/cb951d6c22da78b889893dc793ff755366f83dd5))
+* **Other:** Update release.yml ([](https://github.com/omnixys/kafka-topic-manager/commit/acf87c70eabfed26be271e6cec3be9391c86bbcc))
+
 ## [3.1.1](https://github.com/omnixys/kafka-topic-manager/compare/v3.1.0...v3.1.1) (2026-09-06)
 
 ### Ci
