@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [3.1.3](https://github.com/omnixys/kafka-topic-manager/compare/v3.1.2...v3.1.3) (2026-09-06)
+
+### Ci
+
+* **Ci:** add docker ci 3 ([](https://github.com/omnixys/kafka-topic-manager/commit/984b7655f70a713e3168e2a4075c63095053923e))
+
 ## [3.1.2](https://github.com/omnixys/kafka-topic-manager/compare/v3.1.1...v3.1.2) (2026-09-06)
 
 ### Ci
