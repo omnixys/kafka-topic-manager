@@ -8,6 +8,7 @@ RUN npm install -g pnpm@10.33.0
 COPY package.json ./
 COPY pnpm-lock.yaml ./
 COPY tsconfig.json ./
+COPY pnpm-workspace.yaml ./
 COPY src ./src
 
 RUN --mount=type=secret,id=omnixys_token \
