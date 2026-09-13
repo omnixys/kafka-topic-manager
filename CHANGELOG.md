@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [3.1.5](https://github.com/omnixys/kafka-topic-manager/compare/v3.1.4...v3.1.5) (2026-09-13)
+
+### Dockerfile
+
+* **Dockerfile:** update Dockerfile ([](https://github.com/omnixys/kafka-topic-manager/commit/33df0e56aad384e4b7d9616d8853309391476fc2))
+
 ## [3.1.4](https://github.com/omnixys/kafka-topic-manager/compare/v3.1.3...v3.1.4) (2026-09-13)
 
 ### Deps
