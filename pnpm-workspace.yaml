@@ -5,6 +5,6 @@ minimumReleaseAgeExclude:
   - '@omnixys/cache-ts@4.0.0 || 4.1.0'
   - '@omnixys/context-ts@4.0.2 || 4.1.0'
   - '@omnixys/contracts-ts@4.0.0 || 4.1.0 || 4.5.0'
-  - '@omnixys/kafka-ts@4.0.0 || 4.1.0 || 4.2.0'
+  - '@omnixys/kafka-ts@4.0.0 || 4.1.0 || 4.2.0 || 4.3.0'
   - '@omnixys/logger-ts@4.0.0 || 4.1.0'
   - '@omnixys/observability-ts@4.0.0 || 4.1.0'

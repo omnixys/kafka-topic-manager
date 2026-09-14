@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@omnixys/kafka-ts':
-        specifier: 4.2.0
-        version: 4.2.0(a31bcaa4463abd9b00e3fc24e387318a)
+        specifier: 4.3.0
+        version: 4.3.0(a31bcaa4463abd9b00e3fc24e387318a)
     devDependencies:
       '@commitlint/cli':
         specifier: ^20.5.3
@@ -378,8 +378,8 @@ packages:
     peerDependencies:
       '@nestjs/common': ^11.1.27
 
-  '@omnixys/kafka-ts@4.2.0':
-    resolution: {integrity: sha512-nQxvfRM1TOIiaeHHPSccrmXOgqUS0eM9kkxF6QFSVEERnCk1tCg6h799yJ82kDNlSIuVZ6akHTV4UKdYIA99mw==, tarball: https://npm.pkg.github.com/download/@omnixys/kafka-ts/4.2.0/7c141468c5179299e8e6d8f1159d39f04decc75b}
+  '@omnixys/kafka-ts@4.3.0':
+    resolution: {integrity: sha512-SnQPWUkn1/7grBmyM998I7MRt2IaNNiPmgnfA+fBzHyYdUw121lLY+AVZ8cIzXmIWInoOh+vCJkvl1FKuP/6zg==, tarball: https://npm.pkg.github.com/download/@omnixys/kafka-ts/4.3.0/89182b6c55a258aceffcf8a7e66a1bca3bdb0715}
     engines: {node: '>=26.8.1 <27'}
     peerDependencies:
       '@nestjs/common': ^11.0.0
@@ -3328,7 +3328,7 @@ snapshots:
       '@nestjs/common': 11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0)
       zod: 4.4.3
 
-  '@omnixys/kafka-ts@4.2.0(a31bcaa4463abd9b00e3fc24e387318a)':
+  '@omnixys/kafka-ts@4.3.0(a31bcaa4463abd9b00e3fc24e387318a)':
     dependencies:
       '@nestjs/common': 11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0)
       '@nestjs/core': 11.1.27(@nestjs/common@11.1.27(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@7.2.0))(reflect-metadata@0.2.2)(rxjs@7.8.2)
