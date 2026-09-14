@@ -3,6 +3,12 @@
 All notable changes in this project will be documented in this file.
 
 
+## [3.1.6](https://github.com/omnixys/kafka-topic-manager/compare/v3.1.5...v3.1.6) (2026-09-14)
+
+### Deps
+
+* **Deps:** update omnixys kafka-ts package ([](https://github.com/omnixys/kafka-topic-manager/commit/7b62956b04e2eb78232c3f59441805a4255801d1))
+
 ## [3.1.5](https://github.com/omnixys/kafka-topic-manager/compare/v3.1.4...v3.1.5) (2026-09-13)
 
 ### Dockerfile
